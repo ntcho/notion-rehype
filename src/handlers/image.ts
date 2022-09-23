@@ -9,7 +9,7 @@ const handler = (context: Context, block: any) => {
 
   const blockClass = notionPrefixFactory(context)(BlockType.image);
 
-  const hast = h('div', { className: [blockClass] }, [h('img', { src: url, ...fileAttr }, [])]);
+  const hast = h('div', { className: [blockClass] }, [h('img', { src: url, dim: data.dim, ...fileAttr }, [])]);
   addCaptionToHast(context, hast, data.caption);
 
   return hast;
