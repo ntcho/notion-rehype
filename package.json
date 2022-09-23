@@ -4,6 +4,12 @@
   "description": "Turn Notion blocks(from API) into rehype(hast), so you can make the most of the rich rehype ecosystem.",
   "main": "dist/index.js",
   "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "url": "git@github.com:Kherrisan/notion-rehype.git"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc",
