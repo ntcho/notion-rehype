@@ -8,9 +8,11 @@ const handler = (context: Context, block: any) => {
   const { url, attr: fileAttr } = getNotionFileUrlAndAttr(context, data);
 
   const blockClass = notionPrefixFactory(context)(BlockType.image);
+  const img = h('img', { src: url, dim: data.dim, ...fileAttr }, []);
+  data.caption && (img.properties!!.caption = data.caption);
 
-  const hast = h('div', { className: [blockClass] }, [h('img', { src: url, dim: data.dim, ...fileAttr }, [])]);
-  addCaptionToHast(context, hast, data.caption);
+  const hast = h('div', { className: [blockClass] }, [img]);
+  // addCaptionToHast(context, hast, data.caption);
 
   return hast;
 };
