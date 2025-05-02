@@ -1,4 +1,4 @@
-export type Task = (context: Context) => void;
+export declare type Task = (context: Context) => void;
 
 export interface Options {
   notionPrefix?: string;
@@ -42,6 +42,7 @@ export enum BlockType {
   link_to_page = 'link_to_page', // TODO: type: 'database_id' is not supported
   synced_block = 'synced_block', // TODO: only original block is implemented
   table = 'table',
+  audio = "audio",
   // table_row = 'table_row', // intergrated in table handler
   // TODO: These types need to be implemented
   // child_page = 'child_page',

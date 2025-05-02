@@ -9,7 +9,8 @@ const handler = (context: Context, block: any) => {
 
   const blockClass = notionPrefixFactory(context)(BlockType.bookmark);
 
-  const hast = h('div', { className: [blockClass] }, [h('a', { href: url }, [h('text', url)])]);
+  const hast = h('bookmark', url)
+  // const hast = h('div', { className: [blockClass] }, [h('a', { href: url }, [h('text', url)])]);
   addCaptionToHast(context, hast, caption);
 
   return hast;

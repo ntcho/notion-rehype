@@ -21,6 +21,7 @@ import handleLinkPreview from './link-preview.js';
 import handleLinkToPage from './link-to-page.js';
 import handleSyncedBlock from './synced-block.js';
 import handleTable from './table.js';
+import handleAudio from './audio.js';
 
 import { BlockType, Context } from '../types.js';
 import { addBlockIdToHast } from '../utils.js';
@@ -54,6 +55,7 @@ const handlerByBlockType = {
   [BlockType.link_to_page]: handleLinkToPage,
   [BlockType.synced_block]: handleSyncedBlock,
   [BlockType.table]: handleTable,
+  [BlockType.audio]: handleAudio
 };
 
 export const getBlockHast = (context: Context, block: any): Element | Text | null => {

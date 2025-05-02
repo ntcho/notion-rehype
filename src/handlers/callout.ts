@@ -1,14 +1,14 @@
-import { addTasksToAddRichTexts } from './rich-text.js';
-import { addTasksToAddDirectChildren } from './children.js';
+import { BlockType, Context } from '../types.js';
 import {
-  h,
   getColorClassName,
   getNotionFileUrlAndAttr,
-  notionPrefixFactory,
+  h,
   hasChildren,
+  notionPrefixFactory,
 } from '../utils.js';
+import { addTasksToAddDirectChildren } from './children.js';
+import { addTasksToAddRichTexts } from './rich-text.js';
 
-import { BlockType, Context } from '../types.js';
 
 const handler = (context: Context, block: any) => {
   const data = block[BlockType.callout];

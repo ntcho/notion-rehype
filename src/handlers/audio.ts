@@ -4,15 +4,14 @@ import { h, getNotionFileUrlAndAttr, notionPrefixFactory } from '../utils.js';
 import { BlockType, Context } from '../types.js';
 
 const handler = (context: Context, block: any) => {
-  const data = block[BlockType.image];
+  const data = block[BlockType.audio];
   const { url, attr: fileAttr } = getNotionFileUrlAndAttr(context, data);
 
-  const blockClass = notionPrefixFactory(context)(BlockType.image);
-  // data.caption && (img.properties!!.caption = data.caption);
+  const blockClass = notionPrefixFactory(context)(BlockType.video);
 
-  const hast = h('div', { className: [blockClass] }, [h('img', { src: url, dim: data.dim, ...fileAttr }, [])]);
+  const hast = h('div', { className: [blockClass] }, [h('audio', { src: url, ...fileAttr }, [])]);
   addCaptionToHast(context, hast, data.caption);
-
+  
   return hast;
 };
 
