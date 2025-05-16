@@ -1,7 +1,7 @@
-import { BlockType, Context } from '../types.js';
+import type { Context, GetBlock } from '../types.js';
 import {
   getColorClassName,
-  getNotionFileUrlAndAttr,
+  getFileDetails,
   h,
   hasChildren,
   notionPrefixFactory,
@@ -9,19 +9,20 @@ import {
 import { addTasksToAddDirectChildren } from './children.js';
 import { addTasksToAddRichTexts } from './rich-text.js';
 
+const handler = (context: Context, block: GetBlock<'callout'>) => {
+  const data = block[block.type];
 
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.callout];
-
-  const blockClass = notionPrefixFactory(context)(BlockType.callout);
+  const blockClass = notionPrefixFactory(context)(block.type);
 
   const calloutIcon = h('div', { className: [`${blockClass}-icon`] }, []);
 
-  if (data.icon.type === 'emoji') {
-    calloutIcon.children.push(h('text', data.icon.emoji));
-  } else {
-    const { url, attr: fileAttr } = getNotionFileUrlAndAttr(context, data.icon);
-    calloutIcon.children.push(h('img', { src: url, ...fileAttr }, []));
+  if (data.icon) {
+    if (data.icon.type === 'emoji') {
+      calloutIcon.children.push(h('text', data.icon.emoji));
+    } else {
+      const { url, attr } = getFileDetails(context, data.icon);
+      calloutIcon.children.push(h('img', { src: url, ...attr }, []));
+    }
   }
 
   const calloutContent = h('div', { className: [`${blockClass}-content`] }, []);

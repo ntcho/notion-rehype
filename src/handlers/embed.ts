@@ -1,11 +1,10 @@
+import type { Context, GetBlock } from '../types.js';
 import { h, notionPrefixFactory } from '../utils.js';
 
-import { BlockType, Context } from '../types.js';
+const handler = (context: Context, block: GetBlock<'embed'>) => {
+  const data = block[block.type];
 
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.embed];
-
-  const blockClass = notionPrefixFactory(context)(BlockType.embed);
+  const blockClass = notionPrefixFactory(context)(block.type);
 
   const hast = h('iframe', { src: data.url, className: [blockClass] }, []);
 

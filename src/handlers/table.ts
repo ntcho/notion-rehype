@@ -1,12 +1,11 @@
+import type { Context, GetBlock, RichTextItem } from '../types.js';
+import { addBlockIdToHast, h } from '../utils.js';
 import handleRichText from './rich-text.js';
-import { h, addBlockIdToHast } from '../utils.js';
-
-import { BlockType, Context } from '../types.js';
 
 const getTableCellHast = (
   context: Context,
-  rowBlock: any,
-  richTexts: any[],
+  rowBlock: GetBlock<'table_row'>,
+  richTexts: RichTextItem[],
   type: 'th' | 'td',
   scope: string | undefined
 ) => {
@@ -20,7 +19,7 @@ const getTableCellHast = (
 
 const getTableRowHast = (
   context: Context,
-  block: any,
+  block: GetBlock<'table_row'>,
   isThead: boolean,
   hasColumnHeader: boolean
 ) => {
@@ -44,10 +43,10 @@ const getTableRowHast = (
   return hast;
 };
 
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.table];
+const handler = (context: Context, block: GetBlock<'table'>) => {
+  const data = block[block.type];
   const { has_column_header, has_row_header } = data;
-  const children = data.children || [];
+  const children = (data.children as GetBlock<'table_row'>[]) || [];
 
   const [headerRows, bodyRows] = data.has_row_header
     ? [children.slice(0, 1), children.slice(1)]

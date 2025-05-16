@@ -1,19 +1,22 @@
-import { addTasksToAddRichTexts } from './rich-text.js';
-import { addTasksToAddDirectChildren } from './children.js';
+import type { Context, GetBlock } from '../types.js';
 import {
-  h,
-  getColorClassName,
-  notionPrefixFactory,
   addBlockIdToHast,
+  getColorClassName,
+  h,
   hasChildren,
+  notionPrefixFactory,
 } from '../utils.js';
+import { addTasksToAddDirectChildren } from './children.js';
+import { addTasksToAddRichTexts } from './rich-text.js';
 
-import { BlockType, Context } from '../types.js';
-
-const getListItemHast = (context: Context, block: any) => {
+const getListItemHast = (context: Context, block: GetBlock<'to_do'>) => {
   const data = block[block.type];
 
-  const todoCheckbox = h('input', { type: 'checkbox', checked: data.checked, disabled: true }, []);
+  const todoCheckbox = h(
+    'input',
+    { type: 'checkbox', checked: data.checked, disabled: true },
+    []
+  );
 
   const colorClassName = getColorClassName(data.color);
   const className = colorClassName ? [colorClassName] : undefined;
@@ -34,8 +37,14 @@ const getListItemHast = (context: Context, block: any) => {
   return hast;
 };
 
-const handler = (context: Context, block: any) => {
-  const blockClass = notionPrefixFactory(context)(BlockType.to_do_list);
+const handler = (
+  context: Context,
+  block: Required<{
+    type: 'to_do_list';
+    to_do_list: GetBlock<'to_do'>[];
+  }>
+) => {
+  const blockClass = notionPrefixFactory(context)(block.type);
 
   const hast = h('ul', { className: [blockClass] }, []);
 

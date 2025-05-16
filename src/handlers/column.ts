@@ -1,12 +1,11 @@
-import { addTasksToAddDirectChildren } from './children.js';
+import type { Context, GetBlock } from '../types.js';
 import { h, notionPrefixFactory } from '../utils.js';
+import { addTasksToAddDirectChildren } from './children.js';
 
-import { BlockType, Context } from '../types.js';
+const handler = (context: Context, block: GetBlock<'column'>) => {
+  const data = block[block.type];
 
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.column];
-
-  const blockClass = notionPrefixFactory(context)(BlockType.column);
+  const blockClass = notionPrefixFactory(context)(block.type);
 
   const hast = h('section', { className: [blockClass] }, []);
   addTasksToAddDirectChildren(context, hast, data.children);

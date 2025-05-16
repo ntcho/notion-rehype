@@ -1,16 +1,15 @@
-import { addCaptionToHast } from './caption.js';
+import type { Context, GetBlock } from '../types.js';
 import { h, notionPrefixFactory } from '../utils.js';
+import { addCaptionToHast } from './caption.js';
 
-import { BlockType, Context } from '../types.js';
-
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.bookmark];
+const handler = (context: Context, block: GetBlock<'bookmark'>) => {
+  const data = block[block.type];
   const { url, caption } = data;
 
-  const blockClass = notionPrefixFactory(context)(BlockType.bookmark);
+  const blockClass = notionPrefixFactory(context)(block.type);
 
-  const hast = h('bookmark', url)
-  // const hast = h('div', { className: [blockClass] }, [h('a', { href: url }, [h('text', url)])]);
+  // TODO: add url preview
+  const hast = h('a', { className: [blockClass], href: url }, [h('text', url)]);
   addCaptionToHast(context, hast, caption);
 
   return hast;

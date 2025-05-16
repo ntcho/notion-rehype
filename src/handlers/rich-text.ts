@@ -1,14 +1,14 @@
 import type { Element, Text } from 'hast';
 
 import {
-  h,
   getColorClassName,
-  objAssign,
-  getFootnoteRefId,
   getFootnoteContentId,
+  getFootnoteRefId,
+  h,
+  objAssign,
 } from '../utils.js';
 
-import { Context } from '../types.js';
+import type { Block, Context, RichTextItem } from '../types.js';
 
 const getHastsWithBr = (text: string) => {
   const hasBreak = text.includes('\n');
@@ -28,7 +28,13 @@ const getHastsWithBr = (text: string) => {
   return result;
 };
 
-const annotationKeysInWrapperOrder = ['code', 'bold', 'italic', 'strikethrough', 'underline'];
+const annotationKeysInWrapperOrder = [
+  'code',
+  'bold',
+  'italic',
+  'strikethrough',
+  'underline',
+] as const;
 const tagsByAnnotationKey = {
   code: 'code',
   bold: 'b',
@@ -40,7 +46,7 @@ const tagsByAnnotationKey = {
 const handler = (
   context: Context,
   block: any | null,
-  richTextObj: any,
+  richTextObj: RichTextItem,
   turnLineBreakToBr = true
 ): Element | Text => {
   const { type, plain_text, href, annotations } = richTextObj;
@@ -76,7 +82,8 @@ const handler = (
 
   annotationKeysInWrapperOrder.forEach((key) => {
     if (annotations[key]) {
-      const wrapperTag = tagsByAnnotationKey[key as keyof typeof tagsByAnnotationKey];
+      const wrapperTag =
+        tagsByAnnotationKey[key as keyof typeof tagsByAnnotationKey];
       hasts = [h(wrapperTag, hasts)];
     }
   });
@@ -107,9 +114,9 @@ const handler = (
 
 interface ParamsAddTasksToAddRichTexts {
   context: Context;
-  block: any;
+  block: Block;
   hast: Element;
-  richTexts: any[] | undefined;
+  richTexts: RichTextItem[] | undefined;
   wrapRichTexts?: boolean;
   turnLineBreakToBr?: boolean;
 }
@@ -130,8 +137,10 @@ export const addTasksToAddRichTexts = ({
     hastForRichTexts = wrapper;
   }
 
-  context.addTasks(richTexts, (richTextObj: any) => (ctx) => {
-    hastForRichTexts.children.push(handler(ctx, block, richTextObj, turnLineBreakToBr));
+  context.addTasks(richTexts, (richTextObj) => (ctx) => {
+    hastForRichTexts.children.push(
+      handler(ctx, block, richTextObj, turnLineBreakToBr)
+    );
   });
 };
 

@@ -1,16 +1,27 @@
+import type { Context, GetBlock } from '../types.js';
+import { getFileDetails, h, notionPrefixFactory } from '../utils.js';
 import { addCaptionToHast } from './caption.js';
-import { h, getNotionFileUrlAndAttr, notionPrefixFactory } from '../utils.js';
 
-import { BlockType, Context } from '../types.js';
+const handler = (context: Context, block: GetBlock<'image'>) => {
+  const data = block[block.type];
 
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.image];
-  const { url, attr: fileAttr } = getNotionFileUrlAndAttr(context, data);
+  const { url, attr: fileAttr } = getFileDetails(context, data);
 
-  const blockClass = notionPrefixFactory(context)(BlockType.image);
-  // data.caption && (img.properties!!.caption = data.caption);
+  const blockClass = notionPrefixFactory(context)(block.type);
+  const img = h(
+    'img',
+    {
+      src: url,
+      data: JSON.stringify(data),
+      // dim: data.dim, // TODO: check where property dim is from
+      ...fileAttr,
+    },
+    []
+  );
+  data.caption &&
+    (img.properties!!.caption = data.caption.map((c) => c.plain_text).join());
 
-  const hast = h('div', { className: [blockClass] }, [h('img', { src: url, dim: data.dim, ...fileAttr }, [])]);
+  const hast = h('div', { className: [blockClass] }, [img]);
   addCaptionToHast(context, hast, data.caption);
 
   return hast;

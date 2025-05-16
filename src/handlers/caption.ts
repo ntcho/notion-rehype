@@ -1,15 +1,14 @@
-import { h, addClassToHast, notionPrefixFactory } from '../utils.js';
+import { Element } from 'hast';
+import type { Context, RichTextItem } from '../types.js';
+import { addClassToHast, h, notionPrefixFactory } from '../utils.js';
 import handleRichText from './rich-text.js';
 
-import { Context } from '../types.js';
-import { Element } from 'hast';
-
-const handler = (context: Context, captionObjs: any[]) => {
+const handler = (context: Context, captions: RichTextItem[]) => {
   const captionClass = notionPrefixFactory(context)('caption');
 
   const hast = h('div', { className: [captionClass] }, []);
 
-  context.addTasks(captionObjs, (richTextObj: any) => (ctx) => {
+  context.addTasks(captions, (richTextObj: any) => (ctx) => {
     hast.children.push(handleRichText(ctx, null, richTextObj));
   });
 
@@ -19,13 +18,11 @@ const handler = (context: Context, captionObjs: any[]) => {
 export const addCaptionToHast = (
   context: Context,
   hast: Element,
-  captionObjs: any[] | undefined
+  captions?: RichTextItem[]
 ) => {
-  if (!captionObjs || captionObjs.length < 1) {
-    return;
-  }
+  if (!captions || captions.length < 1) return;
 
-  const caption = handler(context, captionObjs);
+  const caption = handler(context, captions);
   hast.children.push(caption);
 
   const CLS_WITH_CAPTION = 'with-caption';

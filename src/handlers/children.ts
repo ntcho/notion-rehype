@@ -1,14 +1,12 @@
 import { Element, Root } from 'hast';
-
+import type { Block, Context } from '../types.js';
+import { groupBlocks, h, notionPrefixFactory } from '../utils.js';
 import { getBlockHast } from './index.js';
-import { h, addClassToHast, notionPrefixFactory, groupBlocks } from '../utils.js';
-
-import { Context } from '../types.js';
 
 export const addTasksToAddDirectChildren = (
   context: Context,
   hast: Element | Root,
-  children: any[] | undefined
+  children?: Block[]
 ) => {
   context.addTasks(groupBlocks(children), (child: any) => (ctx) => {
     const childHast = getBlockHast(ctx, child);
@@ -16,7 +14,7 @@ export const addTasksToAddDirectChildren = (
   });
 };
 
-const handler = (context: Context, children: any[] | undefined): Element | null => {
+const handler = (context: Context, children?: Block[]): Element | null => {
   const wrapperClass = notionPrefixFactory(context)('children-wrapper');
 
   if (!children || children.length < 1) {
@@ -32,7 +30,7 @@ const handler = (context: Context, children: any[] | undefined): Element | null 
 export const addTasksToAddWrappedChildren = (
   context: Context,
   hast: Element,
-  children: any[] | undefined
+  children?: Block[]
 ) => {
   const childrenHast = handler(context, children);
   if (!childrenHast) {

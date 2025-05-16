@@ -1,11 +1,20 @@
-import { addTasksToAddRichTexts } from './rich-text.js';
+import type { Context, GetBlock } from '../types.js';
+import {
+  addBlockIdToHast,
+  getColorClassName,
+  h,
+  hasChildren,
+} from '../utils.js';
 import { addTasksToAddDirectChildren } from './children.js';
-import { h, getColorClassName, addBlockIdToHast, hasChildren } from '../utils.js';
+import { addTasksToAddRichTexts } from './rich-text.js';
 
-import { Context } from '../types.js';
-
-const getListItemHast = (context: Context, block: any) => {
-  const data = block[block.type];
+const getListItemHast = (
+  context: Context,
+  block: GetBlock<'bulleted_list_item'> | GetBlock<'numbered_list_item'>
+) => {
+  // prettier-ignore
+  // TS will not infer the type of block correctly, so we need to use a type assertion
+  const data = block.type === 'bulleted_list_item' ? block[block.type] : block[block.type];
 
   const colorClassName = getColorClassName(data.color);
   const className = colorClassName ? [colorClassName] : undefined;
@@ -26,14 +35,27 @@ const getListItemHast = (context: Context, block: any) => {
   return hast;
 };
 
-const handler = (context: Context, block: any) => {
-  const blockType = block.type;
+const handler = (
+  context: Context,
+  block:
+    | Required<{
+        type: 'bulleted_list';
+        bulleted_list: GetBlock<'bulleted_list_item'>[];
+      }>
+    | Required<{
+        type: 'numbered_list';
+        numbered_list: GetBlock<'numbered_list_item'>[];
+      }>
+) => {
+  const type = block.type;
 
-  const tagName = blockType === 'bulleted_list' ? 'ul' : 'ol';
+  const tagName = type === 'bulleted_list' ? 'ul' : 'ol';
   const hast = h(tagName, []);
 
-  const listItems = block[blockType];
-  listItems.forEach((listItem: any) => {
+  // prettier-ignore
+  // TS will not infer the type of block correctly, so we need to use a type assertion
+  const listItems = type === 'bulleted_list' ? block[type] : block[type];
+  listItems.forEach((listItem) => {
     hast.children.push(getListItemHast(context, listItem));
   });
 

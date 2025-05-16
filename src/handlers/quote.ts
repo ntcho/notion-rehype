@@ -1,11 +1,10 @@
-import { addTasksToAddRichTexts } from './rich-text.js';
+import type { Context, GetBlock } from '../types.js';
+import { getColorClassName, h, hasChildren } from '../utils.js';
 import { addTasksToAddDirectChildren } from './children.js';
-import { h, getColorClassName, hasChildren } from '../utils.js';
+import { addTasksToAddRichTexts } from './rich-text.js';
 
-import { BlockType, Context } from '../types.js';
-
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.quote];
+const handler = (context: Context, block: GetBlock<'quote'>) => {
+  const data = block[block.type];
 
   const colorClassName = getColorClassName(data.color);
   const className = colorClassName ? [colorClassName] : undefined;

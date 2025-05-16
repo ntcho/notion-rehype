@@ -1,9 +1,12 @@
-import { handleFootnotes, addTasksToAddHastChildren } from './handlers/index.js';
+import {
+  addTasksToAddHastChildren,
+  handleFootnotes,
+} from './handlers/index.js';
 import { h } from './utils.js';
 
-import { Context, Options, Task } from './types.js';
+import type { Block, Context, Options, Task } from './types.js';
 
-export const notionToHast = (blocks: any[], options: Options) => {
+export const notionToHast = (blocks: Block[], options: Options) => {
   const tasks: Task[] = [];
   const footnotes: any[] = [];
 

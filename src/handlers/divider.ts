@@ -1,8 +1,7 @@
+import type { Context, GetBlock } from '../types.js';
 import { h } from '../utils.js';
 
-import { Context } from '../types.js';
-
-const handler = (context: Context, block: any) => {
+const handler = (context: Context, block: GetBlock<'divider'>) => {
   const hast = h('hr', []);
 
   return hast;

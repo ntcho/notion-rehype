@@ -1,11 +1,12 @@
+import type { Context, GetBlock } from '../types.js';
+import { getFileDetails, h, notionPrefixFactory } from '../utils.js';
 import { addCaptionToHast } from './caption.js';
-import { h, getNotionFileUrlAndAttr, notionPrefixFactory } from '../utils.js';
 
-import { BlockType, Context } from '../types.js';
+const handler = (context: Context, block: GetBlock<'file'>) => {
+  const data = block[block.type];
+  const { url, attr: fileAttr } = getFileDetails(context, data);
 
-const handler = (context: Context, block: any) => {
-  const data = block[BlockType.file];
-  const { url, attr: fileAttr } = getNotionFileUrlAndAttr(context, data);
+  if (!url) throw new Error('File URL is missing');
 
   let lastSlashIndex = 0;
   for (let i = url.length - 1; i > -1; i -= 1) {
@@ -16,7 +17,7 @@ const handler = (context: Context, block: any) => {
   }
   const fileName = url.slice(lastSlashIndex + 1) || 'Unknown File';
 
-  const blockClass = notionPrefixFactory(context)(BlockType.file);
+  const blockClass = notionPrefixFactory(context)(block.type);
 
   const hast = h('div', { className: [blockClass] }, [
     h('a', { src: url, ...fileAttr }, [h('text', fileName)]),
