@@ -20,7 +20,7 @@ const handler = (context: Context, block: GetBlock<'file'>) => {
   const blockClass = notionPrefixFactory(context)(block.type);
 
   const hast = h('div', { className: [blockClass] }, [
-    h('a', { src: url, ...fileAttr }, [h('text', fileName)]),
+    h('a', { href: url, ...fileAttr }, [h('text', fileName)]),
   ]);
   addCaptionToHast(context, hast, data.caption);
 
