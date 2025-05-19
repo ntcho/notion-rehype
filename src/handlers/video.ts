@@ -9,7 +9,7 @@ const handler = (context: Context, block: GetBlock<'video'>) => {
   const blockClass = notionPrefixFactory(context)(block.type);
 
   const hast = h('div', { className: [blockClass] }, [
-    h('video', { src: url, ...fileAttr }, []),
+    h('video', { src: url, controls: true, ...fileAttr }, []),
   ]);
   addCaptionToHast(context, hast, data.caption);
 
