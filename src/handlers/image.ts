@@ -8,18 +8,7 @@ const handler = (context: Context, block: GetBlock<'image'>) => {
   const { url, attr: fileAttr } = getFileDetails(context, data);
 
   const blockClass = notionPrefixFactory(context)(block.type);
-  const img = h(
-    'img',
-    {
-      src: url,
-      data: JSON.stringify(data),
-      // dim: data.dim, // TODO: check where property dim is from
-      ...fileAttr,
-    },
-    []
-  );
-  data.caption &&
-    (img.properties!!.caption = data.caption.map((c) => c.plain_text).join());
+  const img = h('img', { src: url, ...fileAttr }, []);
 
   const hast = h('div', { className: [blockClass] }, [img]);
   addCaptionToHast(context, hast, data.caption);
